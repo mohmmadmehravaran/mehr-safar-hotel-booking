@@ -4,6 +4,7 @@ import { useApp } from '../context/AppContext';
 import { useTheme } from '../context/ThemeContext';
 import HotelCard from '../components/HotelCard';
 import CitySearchSelect from '../components/CitySearchSelect';
+import FilterPanel from '../components/FilterPanel';
 import PersianRangeDatePicker from '../components/PersianRangeDatePicker';
 import { motion } from 'framer-motion';
 import { getTodayJalali, gregorianToISO, jalaliToGregorian } from '../utils/date';
@@ -126,6 +127,13 @@ export default function Home() {
       {/* ── HOTELS ── */}
       <section id="hotels" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col lg:flex-row gap-8">
+          {/* Filters appear only after a city has been searched */}
+          {filters.city && (
+            <aside className="lg:w-80 flex-shrink-0">
+              <FilterPanel />
+            </aside>
+          )}
+
           <div className="flex-1">
             <div className="flex items-center justify-between mb-6">
               <div>
