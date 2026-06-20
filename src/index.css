@@ -249,3 +249,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--brand-500); out
   }
   .float, .shimmer, .pulse-ring { animation: none !important; }
 }
+
+
+/* جلوگیری از پرش/اسکرول خودکار صفحه هنگام تغییر فیلترها یا تغییر ارتفاع لیست
+   (مرورگرها به‌صورت پیش‌فرض با scroll anchoring موقعیت را جابه‌جا می‌کنند) */
+html,
+body {
+  overflow-anchor: none;
+}

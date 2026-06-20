@@ -96,8 +96,62 @@ export default function FilterPanel() {
         </motion.button>
       )}
 
-      {/* Stars */}
+      {/* Price (moved to top) */}
       <div>
+        <button onClick={() => toggleSection('price')} className="flex items-center justify-between w-full mb-3 cursor-pointer">
+          <span className="font-semibold text-sm" style={{ color: theme.colors.textPrimary }}>محدوده قیمت</span>
+          {expandedSections.price ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+        </button>
+        <AnimatePresence>
+          {expandedSections.price && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+              <div className="space-y-4">
+                <div>
+                  <div className="flex justify-between text-xs mb-2">
+                    <span style={{ color: theme.colors.textSecondary }}>حداقل</span>
+                    <span className="font-semibold" style={{ color: theme.colors.primary }}>
+                      {filters.minPrice.toLocaleString('fa-IR')} تومان
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={10000000}
+                    step={100000}
+                    value={filters.minPrice}
+                    onChange={(e) => handleMinPrice(Number(e.target.value))}
+                    aria-label="حداقل قیمت"
+                    aria-valuetext={`${filters.minPrice.toLocaleString('fa-IR')} تومان`}
+                    className="w-full"
+                  />
+                </div>
+                <div>
+                  <div className="flex justify-between text-xs mb-2">
+                    <span style={{ color: theme.colors.textSecondary }}>حداکثر</span>
+                    <span className="font-semibold" style={{ color: theme.colors.primary }}>
+                      {filters.maxPrice.toLocaleString('fa-IR')} تومان
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={10000000}
+                    step={100000}
+                    value={filters.maxPrice}
+                    onChange={(e) => handleMaxPrice(Number(e.target.value))}
+                    aria-label="حداکثر قیمت"
+                    aria-valuetext={`${filters.maxPrice.toLocaleString('fa-IR')} تومان`}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Stars */}
+      <div className="border-t border-gray-100 pt-6">
         <button onClick={() => toggleSection('stars')} className="flex items-center justify-between w-full mb-3 group cursor-pointer">
           <span className="font-semibold text-sm" style={{ color: theme.colors.textPrimary }}>ستاره هتل</span>
           {expandedSections.stars ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
@@ -219,59 +273,6 @@ export default function FilterPanel() {
         </AnimatePresence>
       </div>
 
-      {/* Price */}
-      <div className="border-t border-gray-100 pt-6">
-        <button onClick={() => toggleSection('price')} className="flex items-center justify-between w-full mb-3 cursor-pointer">
-          <span className="font-semibold text-sm" style={{ color: theme.colors.textPrimary }}>محدوده قیمت</span>
-          {expandedSections.price ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
-        </button>
-        <AnimatePresence>
-          {expandedSections.price && (
-            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-xs mb-2">
-                    <span style={{ color: theme.colors.textSecondary }}>حداقل</span>
-                    <span className="font-semibold" style={{ color: theme.colors.primary }}>
-                      {filters.minPrice.toLocaleString('fa-IR')} تومان
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min={0}
-                    max={10000000}
-                    step={100000}
-                    value={filters.minPrice}
-                    onChange={(e) => handleMinPrice(Number(e.target.value))}
-                    aria-label="حداقل قیمت"
-                    aria-valuetext={`${filters.minPrice.toLocaleString('fa-IR')} تومان`}
-                    className="w-full"
-                  />
-                </div>
-                <div>
-                  <div className="flex justify-between text-xs mb-2">
-                    <span style={{ color: theme.colors.textSecondary }}>حداکثر</span>
-                    <span className="font-semibold" style={{ color: theme.colors.primary }}>
-                      {filters.maxPrice.toLocaleString('fa-IR')} تومان
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min={0}
-                    max={10000000}
-                    step={100000}
-                    value={filters.maxPrice}
-                    onChange={(e) => handleMaxPrice(Number(e.target.value))}
-                    aria-label="حداکثر قیمت"
-                    aria-valuetext={`${filters.maxPrice.toLocaleString('fa-IR')} تومان`}
-                    className="w-full"
-                  />
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
     </div>
   );
 
@@ -301,7 +302,7 @@ export default function FilterPanel() {
 
       {/* Desktop */}
       <div
-        className="hidden lg:block sticky top-24 p-6"
+        className="hidden lg:block sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto p-6"
         style={{
           backgroundColor: theme.colors.cardBg,
           borderRadius: theme.sizes.cardBorderRadius + 4,
