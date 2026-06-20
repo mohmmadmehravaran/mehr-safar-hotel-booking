@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Search, MapPin, Award, TrendingUp, Heart } from 'lucide-react';
+import { Search, Award, TrendingUp, Heart } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useTheme } from '../context/ThemeContext';
 import HotelCard from '../components/HotelCard';
-import FilterPanel from '../components/FilterPanel';
+import CitySearchSelect from '../components/CitySearchSelect';
 import PersianRangeDatePicker from '../components/PersianRangeDatePicker';
 import { motion } from 'framer-motion';
 import { getTodayJalali, gregorianToISO, jalaliToGregorian } from '../utils/date';
@@ -18,7 +18,15 @@ export default function Home() {
   const today = getTodayJalali();
   const todayISO = gregorianToISO(jalaliToGregorian(today));
 
-  const handleSearch = () => setFilters((prev) => ({ ...prev, search: searchInput }));
+  // Filter hotels by the chosen city and reveal that city's hotels.
+  const applyCity = (city: string) => {
+    const term = city.trim();
+    setFilters((prev) => ({ ...prev, city: term, search: '' }));
+    setSearchInput(term);
+    setTimeout(() => document.getElementById('hotels')?.scrollIntoView({ behavior: 'smooth' }), 60);
+  };
+  const handleSearch = () => applyCity(searchInput);
+  const clearCity = () => { setFilters((prev) => ({ ...prev, city: '', search: '' })); setSearchInput(''); };
   const handleCheckInChange = (date: string) => setFilters((prev) => ({ ...prev, checkIn: date, checkOut: prev.checkOut && prev.checkOut <= date ? '' : prev.checkOut }));
   const handleCheckOutChange = (date: string) => setFilters((prev) => ({ ...prev, checkOut: date }));
 
@@ -59,21 +67,11 @@ export default function Home() {
                 <div className="flex flex-col md:flex-row gap-3">
                   {/* City Search */}
                   <div className="flex-1 relative">
-                    <label htmlFor="hotel-search" className="sr-only">{theme.texts.searchPlaceholder}</label>
-                    <MapPin className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 z-10" style={{ color: theme.colors.textMuted }} aria-hidden="true" />
-                    <input
-                      id="hotel-search"
-                      name="search"
-                      type="search"
-                      enterKeyHint="search"
-                      autoComplete="off"
-                      aria-label={theme.texts.searchPlaceholder}
-                      placeholder={theme.texts.searchPlaceholder}
+                    <CitySearchSelect
                       value={searchInput}
-                      onChange={(e) => setSearchInput(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                      className="w-full pr-12 pl-4 py-3.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      style={{ borderColor: theme.colors.cardBorder, color: theme.colors.textPrimary }}
+                      onChange={setSearchInput}
+                      onSelect={applyCity}
+                      placeholder={theme.texts.searchPlaceholder}
                     />
                   </div>
 
@@ -128,15 +126,24 @@ export default function Home() {
       {/* ── HOTELS ── */}
       <section id="hotels" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="lg:w-80 flex-shrink-0">
-            <FilterPanel />
-          </aside>
-
           <div className="flex-1">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-black mb-1" style={{ color: theme.colors.textPrimary }}>هتل‌ها و اقامتگاه‌ها</h2>
-                <p className="text-sm" style={{ color: theme.colors.textSecondary }}>{filteredHotels.length} مورد یافت شد</p>
+                <h2 className="text-xl font-black mb-1" style={{ color: theme.colors.textPrimary }}>
+                  {filters.city ? `هتل‌های ${filters.city}` : 'هتل‌ها و اقامتگاه‌ها'}
+                </h2>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm" style={{ color: theme.colors.textSecondary }}>{filteredHotels.length} مورد یافت شد</p>
+                  {filters.city && (
+                    <button
+                      onClick={clearCity}
+                      className="text-xs font-bold px-2.5 py-1 rounded-full hover:opacity-80 transition-opacity"
+                      style={{ backgroundColor: theme.colors.primaryLight, color: theme.colors.primary }}
+                    >
+                      نمایش همه شهرها ✕
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-full" style={{ backgroundColor: theme.colors.primaryLight }}>
                 <TrendingUp className="w-4 h-4" style={{ color: theme.colors.primary }} />
@@ -148,7 +155,7 @@ export default function Home() {
               <div className="text-center py-20 rounded-3xl" style={{ backgroundColor: theme.colors.cardBg, border: `1px solid ${theme.colors.cardBorder}` }}>
                 <Search className="w-14 h-14 mx-auto mb-4" style={{ color: theme.colors.textMuted }} />
                 <h3 className="text-lg font-bold mb-2" style={{ color: theme.colors.textPrimary }}>هتلی یافت نشد</h3>
-                <p className="text-sm" style={{ color: theme.colors.textSecondary }}>فیلترها را تغییر دهید</p>
+                <p className="text-sm" style={{ color: theme.colors.textSecondary }}>برای این شهر هتلی ثبت نشده است؛ شهر دیگری را جستجو کنید</p>
               </div>
             ) : (
               <>

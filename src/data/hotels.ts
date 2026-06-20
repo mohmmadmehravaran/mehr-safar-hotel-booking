@@ -278,6 +278,60 @@ export const sampleHotels: Hotel[] = [
     longitude: 50.8,
     isFeatured: false,
   },
+  {
+    id: 11,
+    name: 'هتل قصر طلایی مشهد',
+    city: 'مشهد',
+    address: 'بلوار وکیل‌آباد، نبش وکیل‌آباد ۱۵',
+    stars: 5,
+    type: 'هتل',
+    review: 'عالی',
+    reviewScore: 9.4,
+    pricePerNight: 5200000,
+    images: [
+      'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800',
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+    ],
+    description:
+      'هتل قصر طلایی یکی از لوکس‌ترین هتل‌های پنج‌ستاره مشهد است که با فاصله‌ی کوتاه تا حرم مطهر رضوی، اقامتی مجلل و آرامش‌بخش را برای زائران و گردشگران فراهم می‌کند.',
+    amenities: ['استخر', 'سونا', 'جکوزی', 'رستوران', 'کافی‌شاپ', 'پارکینگ', 'اینترنت رایگان', 'سرویس اتاق ۲۴ساعته'],
+    rooms: [
+      { id: 1101, name: 'اتاق دبل رویال', capacity: 2, price: 5200000, count: 8, features: ['تخت کینگ', 'چشم‌انداز شهر', 'مینی‌بار'] },
+      { id: 1102, name: 'سوئیت پنت‌هاوس', capacity: 4, price: 9800000, count: 3, features: ['دو اتاق خواب', 'جکوزی', 'تراس اختصاصی'] },
+    ],
+    phone: '051-38765432',
+    email: 'info@ghasretalaei.com',
+    latitude: 36.3,
+    longitude: 59.5,
+    isFeatured: true,
+  },
+  {
+    id: 12,
+    name: 'هتل آپارتمان رضوان مشهد',
+    city: 'مشهد',
+    address: 'خیابان امام رضا، امام رضا ۸',
+    stars: 3,
+    type: 'هتل آپارتمان',
+    review: 'بسیار خوب',
+    reviewScore: 8.3,
+    pricePerNight: 1850000,
+    images: [
+      'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800',
+      'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800',
+    ],
+    description:
+      'هتل آپارتمان رضوان با موقعیت عالی در نزدیکی حرم مطهر، واحدهای مجهز به آشپزخانه را برای اقامت خانوادگی مقرون‌به‌صرفه ارائه می‌دهد.',
+    amenities: ['آشپزخانه', 'پارکینگ', 'اینترنت رایگان', 'آسانسور', 'سرویس نظافت روزانه'],
+    rooms: [
+      { id: 1201, name: 'واحد یک‌خوابه', capacity: 3, price: 1850000, count: 10, features: ['آشپزخانه', 'یخچال', 'تلویزیون'] },
+      { id: 1202, name: 'واحد دوخوابه', capacity: 5, price: 2900000, count: 6, features: ['دو اتاق خواب', 'آشپزخانه کامل', 'سالن پذیرایی'] },
+    ],
+    phone: '051-32145678',
+    email: 'info@rezvanhotel.com',
+    latitude: 36.28,
+    longitude: 59.61,
+    isFeatured: false,
+  },
 ];
 
 export const sampleReviews: UserReview[] = [
