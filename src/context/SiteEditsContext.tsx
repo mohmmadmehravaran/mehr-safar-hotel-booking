@@ -419,18 +419,32 @@ export function SiteEditsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let animationFrameId: number;
     const sync = () => {
-      const registry = editsRef.current;
-      const cur = getCurrentPath();
-      Object.entries(registry).forEach(([path, edit]) => {
-        // Page scoping: only apply an element edit on the page it was made.
-        if (!path.startsWith('widget-id:')) {
-          const pg = pageOfKey(path);
-          if (pg === null || pg !== cur) return; // legacy/global or other-page → skip
-        }
-        const el = findByDomPath(path);
-        if (el) applySingleEdit(el, edit);
-      });
-      animationFrameId = requestAnimationFrame(sync);
+      // NOTE: the whole body is wrapped so that a single bad edit can never
+      // break the rAF chain. If we let an exception escape, the loop would die
+      // permanently and edits would stop re-applying on client-side navigation
+      // (the page would only show them again after a full browser refresh).
+      try {
+        const registry = editsRef.current;
+        const cur = getCurrentPath();
+        Object.entries(registry).forEach(([path, edit]) => {
+          try {
+            // Page scoping: only apply an element edit on the page it was made.
+            if (!path.startsWith('widget-id:')) {
+              const pg = pageOfKey(path);
+              if (pg === null || pg !== cur) return; // legacy/global or other-page → skip
+            }
+            const el = findByDomPath(path);
+            if (el) applySingleEdit(el, edit);
+          } catch {
+            // Ignore this one edit and keep applying the rest.
+          }
+        });
+      } catch {
+        // Never let the loop die.
+      } finally {
+        // Always reschedule, even if something above threw.
+        animationFrameId = requestAnimationFrame(sync);
+      }
     };
     sync();
     return () => cancelAnimationFrame(animationFrameId);
